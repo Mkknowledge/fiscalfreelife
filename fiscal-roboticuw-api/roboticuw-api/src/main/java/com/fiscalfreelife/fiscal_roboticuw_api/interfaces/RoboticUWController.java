@@ -1,7 +1,9 @@
 package com.fiscalfreelife.fiscal_roboticuw_api.interfaces;
 
 import com.fiscalfreelife.fiscal_roboticuw_api.application.dto.*;
+import com.fiscalfreelife.fiscal_roboticuw_api.service.RoboticUWService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,9 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 @RequestMapping("/roboticuw")
 public class RoboticUWController {
 
+    @Autowired
+    RoboticUWService roboticUWService;
+
     @PostMapping("/offerings")
     public ResponseEntity<CoverageResponse> getOfferingDetails(@RequestBody Coverage coverage) throws Exception {
         log.info("GetOfferings.");
@@ -30,19 +35,6 @@ public class RoboticUWController {
         if (!isEmpty(coverage) && !isEmpty(coverage.getDateOfBirth()) && !coverage.getDateOfBirth().equalsIgnoreCase(formatter.format(dob))){
             throw new Exception("DateOfBirth is not in valid format");
         }
-        List<Coverages> coverages = Collections.singletonList(Coverages.builder().code("")
-                .loading(Collections.singletonList(Loading.builder().build()))
-                .sumAssured(new BigDecimal("1000"))
-                .build());
-
-        List<Offerings> offerings = Collections.singletonList(Offerings.builder().paymentFrequency("Monthly")
-                .policyTerm("40")
-                .coverages(coverages)
-                .productCode("P1")
-                .premiumPayingTerm("40")
-                .build());
-
-        return ResponseEntity.ok(CoverageResponse.builder().offerings(offerings).build());
+        return ResponseEntity.ok(roboticUWService.getCoverageOffering(coverage));
     }
-
 }
