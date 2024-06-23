@@ -9,8 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Date;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @RestController
@@ -18,8 +23,13 @@ import java.util.List;
 public class RoboticUWController {
 
     @PostMapping("/offerings")
-    public ResponseEntity<CoverageResponse> getOfferingDetails(@RequestBody Coverage coverage) {
+    public ResponseEntity<CoverageResponse> getOfferingDetails(@RequestBody Coverage coverage) throws Exception {
         log.info("GetOfferings.");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date dob = formatter.parse(coverage.getDateOfBirth());
+        if (!isEmpty(coverage) && !isEmpty(coverage.getDateOfBirth()) && !coverage.getDateOfBirth().equalsIgnoreCase(formatter.format(dob))){
+            throw new Exception("DateOfBirth is not in valid format");
+        }
         List<Coverages> coverages = Collections.singletonList(Coverages.builder().code("")
                 .loading(Collections.singletonList(Loading.builder().build()))
                 .sumAssured(new BigDecimal("1000"))
