@@ -19,6 +19,7 @@ public class RoboticUWController {
 
     @PostMapping("/offerings")
     public ResponseEntity<CoverageResponse> getOfferingDetails(@RequestBody Coverage coverage) {
+        log.info("GetOfferings.");
         List<Coverages> coverages = Collections.singletonList(Coverages.builder().code("")
                 .loading(Collections.singletonList(Loading.builder().build()))
                 .sumAssured(new BigDecimal("1000"))
