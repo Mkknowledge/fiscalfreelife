@@ -21,7 +21,7 @@ import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Slf4j
 @RestController
-@RequestMapping("/roboticuw")
+//@RequestMapping("/roboticuw")
 public class RoboticUWController {
 
     @Autowired
